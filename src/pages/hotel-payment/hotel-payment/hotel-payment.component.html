@@ -1,0 +1,126 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Payment Methods</h3>
+            <div class="tabbable booking-details-tabbable">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li>
+                        <a href="#bank-account" data-toggle="tab">
+                            <i class="fa fa-camera"></i>Bank Account Payment</a>
+                    </li>
+                    <li class="active">
+                        <a href="#domestic-card" data-toggle="tab">
+                            <i class="fa fa-map-marker"></i>Card Payment</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="gap gap-small"></div>
+                    <div class="tab-pane fade" id="bank-account">
+                        <h4>How to pay into our bank account</h4>
+                        <p class="mb30">Make a direct payment into any of the accounts below. You can still make transfer to our bank account
+                            from your banking mobile application </p>
+                        <div class="col-md-6">
+                            <img class="pp-img" src="assets/img/keystone.png" alt="Keystone bank Logo" title="" />
+                            <p>Keystone Bank
+                                <br> Account Name:
+                                <strong>TravelBanc Limited</strong>
+                                <br> Account Number:
+                                <strong>1007019839</strong>
+                            </p>
+                            <button (click)="goHome()" class="btn btn-primary">Return Home</button>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade in active" id="domestic-card">
+                        <div class="row mt20">
+                            <div class="col-md-6">
+                                <img class="pp-img" src="assets/img/flutter_wave.png" alt="Ravepay Logo" title="" />
+                                <p>Ravepay
+                                    <br> Booking Amount: &#8358;{{formatCurrency(room.price) | number}}
+                                    <br> Transaction Charge: &#8358;0.00
+                                    <br> Booking Total:
+                                    <strong>&#8358;{{formatCurrency(room.price) | number}}</strong>
+                                </p>
+                                <button (click)="ravePay()" class="btn btn-primary">Pay via Ravepay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="gap gap-small"></div>
+            <div class="gap gap-small"></div>
+        </div>
+
+        <div class="col-md-4 aside-stick">
+            <div class="booking-item-payment">
+                <header class="clearfix">
+                    <a class="booking-item-payment-img" href="#">
+                        <img src="{{hotel.imageList[0].imageUrl}}" alt="Image Alternative text" title="hotel 1">
+                    </a>
+                    <h5 class="booking-item-payment-title">
+                        <a href="#">{{hotel.hotelName}}</a>
+                    </h5>
+                    <ul class="icon-group booking-item-rating-stars">
+                        <rating [(ngModel)]="hotel.starRating" [max]="5" [readonly]="true"></rating>
+                    </ul>
+                </header>
+                <ul class="booking-item-payment-details">
+                    <li>
+                        <h5>Booking for {{nights}} nights</h5>
+                        <div class="booking-item-payment-date">
+                            <p class="booking-item-payment-date-day">{{formateDate3(hotelSearch.checkInDate)}}</p>
+                            <p class="booking-item-payment-date-weekday">{{formateDate2(hotelSearch.checkInDate)}}</p>
+                        </div>
+                        <i class="fa fa-arrow-right booking-item-payment-date-separator"></i>
+                        <div class="booking-item-payment-date">
+                            <p class="booking-item-payment-date-day">{{formateDate3(hotelSearch.checkOutDate)}}</p>
+                            <p class="booking-item-payment-date-weekday">{{formateDate2(hotelSearch.checkOutDate)}}</p>
+                        </div>
+                    </li>
+                    <div class="row details-divider-hotels">
+                        <div class="col-md-12">
+                            <h5>{{room.roomDescription}}</h5>
+                        </div>
+                    </div>
+                    <li>
+                        <ul class="booking-item-payment-price">
+                            <div class="row">
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">{{nights}} Nights</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-----------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">&#8358;{{formatCurrency(room.price) | number}}
+                                        </p>
+                                    </div>
+                                </li>
+                            </div>
+                            <div class="row">
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">Booking Ref</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-----------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">{{bookingResponse.bookingNumber}}
+                                        </p>
+                                    </div>
+                                </li>
+                            </div>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="col-md-6 booking-item-payment-total">Total Amount:</span>
+                        <span class="col-md-6 total-payable-amount">&#8358;{{formatCurrency(room.price) | number}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

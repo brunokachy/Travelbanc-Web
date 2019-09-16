@@ -1,0 +1,722 @@
+<!-- TOP AREA -->
+<div class="top-area show-onload auto-height">
+    <div class="bg-holder full">
+        <div class="bg-front full-height bg-front-mob-rel">
+            <div class="container full-height">
+                <div class="rel full-height">
+                    <div class="tagline visible-lg" id="tagline">
+                        <span>Search your top</span>
+                        <ul>
+                            <li>flight deals</li>
+                            <li>hotel deals</li>
+                            <li class="active">package deals</li>
+                        </ul>
+                    </div>
+                    <div class="search-tabs search-tabs-bg search-tabs-bottom mb50">
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs" id="myTab">
+                                <li class="active">
+                                    <a href="#tab2" data-toggle="tab">
+                                        <i class="fa fa-plane"></i>
+                                        <span>Flights</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#tab1" data-toggle="tab">
+                                        <i class="fa fa-building-o"></i>
+                                        <span>Hotels</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a target="_blank" href="http://packages.mytravelbanc.com/">
+                                        <i class="fa fa-building-o"></i>
+                                        <span>Vacation Packages</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div #tab2 class="tab-pane fade in active" id="tab2">
+                                    <div class="tabbable">
+                                        <ul class="nav nav-pills nav-sm nav-no-br mb10" id="flightChooseTab">
+                                            <li>
+                                                <a href="#flight-search-1" data-toggle="tab">One Way</a>
+                                            </li>
+                                            <li class="active">
+                                                <a href="#flight-search-2" data-toggle="tab">Round Trip</a>
+                                            </li>
+                                            <li>
+                                                <a href="#flight-search-3" data-toggle="tab">Multiple Trip</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade" id="flight-search-1">
+                                                <form autocomplete="off" (ngSubmit)="searchFlight('1')" ngNativeValidate>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <i class="fa fa-plane input-icon"></i>
+                                                                <label>Flying from</label>
+                                                                <input [(ngModel)]="departureCity" name="departureCity" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
+                                                                    [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
+                                                                    placeholder="Enter name of city or airport" class="typeahead form-control"
+                                                                    [typeaheadMinLength]="2" (ngModelChange)="checkInput($event)"
+                                                                    typeaheadWaitMs="2000" required/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <i class="fa fa-plane fa-flip-vertical input-icon"></i>
+                                                                <label>Flying to</label>
+                                                                <input type="text" class="typeahead form-control" [(ngModel)]="destinationCity" name="destinationCity" placeholder="Enter name of city or airport"
+                                                                    [typeaheadMinLength]="2" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelect($event, 'Destination')"
+                                                                    [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
+                                                                    (ngModelChange)="checkInput($event)" typeaheadWaitMs="2000"
+                                                                    required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <label>Seat Class</label>
+                                                                <select class="form-control" name="seatclass" id="seatclass" [(ngModel)]="seatclass" required>
+                                                                    <option value="1">Economy</option>
+                                                                    <option value="3">Business</option>
+                                                                    <option value="4">First Class</option>
+                                                                    <option value="2">Premium</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <label for="name">No. of Passengers</label>
+                                                                <input type="text" class="form-control" [outsideClick]="true" [popover]="popTemplate" name="totalTravellers" id="totalTravellers"
+                                                                    [value]="getTotalTraveller()">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                                                                <label>Departure</label>
+                                                                <input type="text" class="date-pick form-control" name="departureDate" placeholder="Departure date" [maxDate]="maxDepartureDate"
+                                                                    [minDate]="minDepartureDate" [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                                    required [(ngModel)]="departureDate" bsDatepicker> </div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-primary btn-lg" type="submit">Search for Flights</button>
+                                                </form>
+                                            </div>
+                                            <div class="tab-pane fade in active" id="flight-search-2">
+                                                <form autocomplete="off" (ngSubmit)="searchFlight('2')" ngNativeValidate>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <i class="fa fa-plane input-icon"></i>
+                                                                <label>Flying from</label>
+                                                                <input [(ngModel)]="departureCity" name="departureCity" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
+                                                                    [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
+                                                                    placeholder="Enter name of city or airport" class="typeahead form-control"
+                                                                    [typeaheadMinLength]="2" (ngModelChange)="checkInput($event)"
+                                                                    typeaheadWaitMs="2000" required/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <i class="fa fa-plane fa-flip-vertical input-icon"></i>
+                                                                <label>Flying to</label>
+                                                                <input type="text" class="typeahead form-control" [(ngModel)]="destinationCity" name="destinationCity" placeholder="Enter name of city or airport"
+                                                                    [typeaheadMinLength]="2" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelect($event, 'Destination')"
+                                                                    [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
+                                                                    (ngModelChange)="checkInput($event)" typeaheadWaitMs="2000"
+                                                                    required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <label>Seat Class</label>
+                                                                <select class="form-control" name="seatclass" id="seatclass" [(ngModel)]="seatclass" required>
+                                                                    <option value="1">Economy</option>
+                                                                    <option value="3">Business</option>
+                                                                    <option value="4">First Class</option>
+                                                                    <option value="2">Premium</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <label for="name">No. of Passengers</label>
+                                                                <input type="text" class="form-control" [outsideClick]="true" [popover]="popTemplate" name="totalTravellers" id="totalTravellers"
+                                                                    [value]="getTotalTraveller()">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                                                                <label>Departure</label>
+                                                                <input type="text" class="date-pick form-control" name="departureDate" placeholder="Departure date" [maxDate]="maxDepartureDate"
+                                                                    [minDate]="minDepartureDate" (bsValueChange)="formatReturnDate($event)"
+                                                                    [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                                    required [(ngModel)]="departureDate" bsDatepicker> </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                                                                <label>Return</label>
+                                                                <input type="text" class="date-pick form-control" name="returnDate" id="returnDate" placeholder="Return date" required [maxDate]="maxReturnDate"
+                                                                    [minDate]="minReturnDate" [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                                    [(ngModel)]="returnDate" bsDatepicker>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-primary btn-lg" type="submit">Search for Flights</button>
+                                                </form>
+                                            </div>
+                                            <div class="tab-pane fade" id="flight-search-3">
+                                                <form autocomplete="off" (ngSubmit)="searchFlight('3')" ngNativeValidate>
+                                                    <div class="row" *ngFor="let u of multipleDest; let i = index">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <i class="fa fa-plane input-icon"></i>
+                                                                <label>Flying from</label>
+                                                                <input ngModel name="departureCity{{i}}" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelectM($event, 'Departure', i)"
+                                                                    [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
+                                                                    placeholder="Enter name of city or airport" class="typeahead form-control"
+                                                                    [typeaheadMinLength]="2" (ngModelChange)="checkInput($event)"
+                                                                    typeaheadWaitMs="2000" required/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <i class="fa fa-plane fa-flip-vertical input-icon"></i>
+                                                                <label>Flying to</label>
+                                                                <input type="text" class="typeahead form-control" ngModel name="destinationCity{{i}}" placeholder="Enter name of city or airport"
+                                                                    [typeaheadMinLength]="2" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelectM($event, 'Destination', i)"
+                                                                    [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName"
+                                                                    (ngModelChange)="checkInput($event)" typeaheadWaitMs="2000"
+                                                                    required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                                                                <label>Departure</label>
+                                                                <input type="text" class="date-pick form-control" name="u.departureDate" placeholder="Departure date" [maxDate]="maxDepartureDate"
+                                                                    [minDate]="minDepartureDate" [bsConfig]="{dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange'}"
+                                                                    required [(ngModel)]="u.departureDate" bsDatepicker>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div>
+                                                                <label class="control-label"> &nbsp; </label>
+                                                                <button type="button" class="btn btn-success btn-sm" *ngIf="i == 0 && multipleDest.length < 4" (click)="addDestination()">
+                                                                    <span aria-hidden="true">+ Add</span>
+                                                                </button>
+                                                                <button type="button" class="btn btn-danger btn-sm" *ngIf="i + 1 == multipleDest.length && i != 1" (click)="removeDestination()">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <label>No. of Passengers</label>
+                                                                <input type="text" class="form-control" [outsideClick]="true" [popover]="popTemplate" name="totalTravellers" id="totalTravellers"
+                                                                    required [value]="getTotalTraveller()">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group form-group-lg form-group-icon-left">
+                                                                <label>Seat Class</label>
+                                                                <select class="form-control" name="seatclass" id="seatclass" [(ngModel)]="seatclass" required>
+                                                                    <option value="1">Economy</option>
+                                                                    <option value="3">Business</option>
+                                                                    <option value="4">First Class</option>
+                                                                    <option value="2">Premium</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-primary btn-lg" type="submit">Search for Flights</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div #tab1 class="tab-pane fade " id="tab1">
+                                    <form autocomplete="off" (ngSubmit)="searchHotel()" ngNativeValidate>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group form-group-lg form-group-icon-left">
+                                                    <i class="fa fa-map-marker input-icon"></i>
+                                                    <label>City, Destination or Hotel Name</label>
+                                                    <input [(ngModel)]="hotel" name="hotel" [typeahead]="hotelDatasource" (typeaheadOnSelect)="typeaheadOnSelectH($event)" [typeaheadOptionsLimit]="10"
+                                                        typeaheadOptionField="name" placeholder="Enter destination, city name, airport or address"
+                                                        class="typeahead form-control" [typeaheadMinLength]="2" (ngModelChange)="checkInputH($event)"
+                                                        typeaheadWaitMs="1000" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-lg form-group-icon-left">
+                                                    <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                                                    <label>Check-in date</label>
+                                                    <input type="text" class="date-pick form-control" name="checkinDate" placeholder="Check-in Date" [maxDate]="maxCheckinDate"
+                                                        [minDate]="minCheckinDate" [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange'}"
+                                                        (bsValueChange)="formateCheckoutDate($event)" required [(ngModel)]="checkinDate"
+                                                        bsDatepicker>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group form-group-lg form-group-icon-left">
+                                                    <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                                                    <label>Check-out date</label>
+                                                    <input type="text" class="date-pick form-control" name="checkoutDate" placeholder="Check-out Date" [maxDate]="maxCheckoutDate"
+                                                        [minDate]="minCheckoutDate" [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                                        required [(ngModel)]="checkoutDate" bsDatepicker>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group form-group-lg form-group-select-plus">
+                                                    <label>No. of rooms</label>
+                                                    <select class="form-control" (ngModelChange)="checkRooms($event)" name="noOfRooms" [(ngModel)]="noOfRooms" required>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" *ngFor="let u of roomDetailLists; let i = index">
+                                            <div class="col-md-2">
+                                                <div class="form-group form-group-lg form-group-select-plus">
+                                                    <label for="noOfRooms">Adults (18yrs+)</label>
+                                                    <select class="form-control" name="adult{{i}}" (ngModelChange)="setAdultAge($event, i)" [(ngModel)]="u.numberOfAdults" required>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group form-group-lg form-group-select-plus">
+                                                    <label for="child{{i}}">Child(0 - 17yrs)</label>
+                                                    <select class="form-control" name="child{{i}}" (ngModelChange)="setChildrenAge($event, i)" [(ngModel)]="u.numberOfChildren"
+                                                        required>
+                                                        <option value="0">--</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2" *ngFor="let v of u.childrenAgeList; let j = index">
+                                                <div class="form-group form-group-lg form-group-select-plus">
+                                                    <label for="childAge{{j}}">Age of Child {{j + 1}}</label>
+                                                    <select class="form-control" name="childAge{{j}}" [(ngModel)]="roomDetailLists[i].childrenAgeList[j]" required>
+                                                        <option value="0">Under 1</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                        <option value="13">13</option>
+                                                        <option value="14">14</option>
+                                                        <option value="15">15</option>
+                                                        <option value="16">16</option>
+                                                        <option value="17">17</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary btn-lg" type="submit">Search for Hotels</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="owl-carousel owl-slider owl-carousel-area visible-lg" id="owl-carousel-slider" data-nav="false">
+            <div class="bg-holder full">
+                <div class="bg-mask"></div>
+                <div class="bg-img" style="background-image:url(assets/img/hero-banc.png);"></div>
+            </div>
+            <div class="bg-holder full">
+                <div class="bg-mask"></div>
+                <div class="bg-img" style="background-image:url(assets/img/backgrounds/nature.jpg);"></div>
+            </div>
+            <div class="bg-holder full">
+                <div class="bg-mask"></div>
+                <div class="bg-img" style="background-image:url(assets/img/backgrounds/beach.jpg);"></div>
+            </div>
+        </div>
+
+        <div class="bg-mask hidden-lg"></div>
+    </div>
+</div>
+<!-- END TOP AREA  -->
+
+
+
+
+<!-- <div class="container-fluid bg-light-grey">
+    <div class="container">
+        <div class="gap"></div>
+        <h2 class="text-left mb20">Last Minute Deals</h2>
+        <div class="row row-wrap">
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-header">
+                        <a class="hover-img" href="#">
+                            <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York" title="Waldorf Astoria New York" />
+                            <h5 class="hover-title-center">Book Now</h5>
+                        </a>
+                    </header>
+                    <div class="last-minute-caption">
+                        <ul class="icon-group text-tiny text-color">
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star-half-empty"></i>
+                            </li>
+                        </ul>
+                        <h5 class="thumb-title">
+                            <a class="text-darken" href="#">Waldorf Astoria New York</a>
+                        </h5>
+                        <p class="mb0">
+                            <small>
+                                <i class="fa fa-map-marker"></i> Flushing, NY (LaGuardia Airport (LGA))</small>
+                        </p>
+                        <p class="mb0 text-darken">
+                            <span class="text-lg lh1em text-color">NGN 30,000</span>
+                            <small> per night</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-header">
+                        <a class="hover-img" href="#">
+                            <img src="assets/img/waldorf-astoria.png" alt="Image Alternative text" title="hotel PORTO BAY RIO INTERNACIONAL de luxe"
+                            />
+                            <h5 class="hover-title-center">Book Now</h5>
+                        </a>
+                    </header>
+                    <div class="last-minute-caption">
+                        <ul class="icon-group text-tiny text-color">
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                        </ul>
+                        <h5 class="thumb-title">
+                            <a class="text-darken" href="#">The London NYC</a>
+                        </h5>
+                        <p class="mb0">
+                            <small>
+                                <i class="fa fa-map-marker"></i> New York, NY (Chelsea)</small>
+                        </p>
+                        <p class="mb0 text-darken">
+                            <span class="text-lg lh1em text-color">NGN 17,000</span>
+                            <small> / per night</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-header">
+                        <a class="hover-img" href="#">
+                            <img src="assets/img/waldorf-astoria.png" alt="Image Alternative text" title="hotel 1" />
+                            <h5 class="hover-title-center">Book Now</h5>
+                        </a>
+                    </header>
+                    <div class="last-minute-caption">
+                        <ul class="icon-group text-tiny text-color">
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star-half-empty"></i>
+                            </li>
+                        </ul>
+                        <h5 class="thumb-title">
+                            <a class="text-darken" href="#">Grand Hyatt New York</a>
+                        </h5>
+                        <p class="mb0">
+                            <small>
+                                <i class="fa fa-map-marker"></i> Ozone Park, NY (Kennedy Airport (JFK))</small>
+                        </p>
+                        <p class="mb0 text-darken">
+                            <span class="text-lg lh1em text-color">NGN 26,000</span>
+                            <small> /per night</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="thumb last-minute-card">
+                    <header class="thumb-header">
+                        <a class="hover-img" href="#">
+                            <img src="assets/img/waldorf-astoria.png" alt="Waldorf Astoria New York" title="Waldorf Astoria New York" />
+                            <h5 class="hover-title-center">Book Now</h5>
+                        </a>
+                    </header>
+                    <div class="last-minute-caption">
+                        <ul class="icon-group text-tiny text-color">
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i>
+                            </li>
+                            <li>
+                                <i class="fa fa-star-o"></i>
+                            </li>
+                        </ul>
+                        <h5 class="thumb-title">
+                            <a class="text-darken" href="#">Affinia Shelburne</a>
+                        </h5>
+                        <p class="mb0">
+                            <small>
+                                <i class="fa fa-map-marker"></i> Brooklyn, NY (Brooklyn)</small>
+                        </p>
+                        <p class="mb0 text-darken">
+                            <span class="text-lg lh1em text-color">NGN 43,000</span>
+                            <small> / per night</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="gap gap-small"></div>
+    </div>
+</div> -->
+
+<div class="container bg-flight-illustration">
+    <div class="row">
+        <div class="gap"></div>
+        <h2 class="text-center">Why TravelBanc?</h2>
+        <div class="gap"></div>
+        <div class="col-md-12">
+            <div class="row row-wrap" data-gutter="120">
+                <div class="col-md-4">
+                    <div class="thumb">
+                        <header class="thumb-header">
+                            <i class="fa fa-briefcase box-icon-black round box-icon-big animate-icon-top-to-bottom"></i>
+                        </header>
+                        <div class="thumb-caption">
+                            <h5 class="thumb-title">
+                                <a class="text-darken" href="#">Combine & Save</a>
+                            </h5>
+                            <p class="thumb-desc">Flexible customer centric travel plans to suit your travel needs.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumb">
+                        <header class="thumb-header">
+                            <i class="fa fa-thumbs-o-up box-icon-black round box-icon-big animate-icon-top-to-bottom"></i>
+                        </header>
+                        <div class="thumb-caption">
+                            <h5 class="thumb-title">
+                                <a class="text-darken" href="#">Best Travel Agent</a>
+                            </h5>
+                            <p class="thumb-desc">Management team with vast industry experience to drive your travel needs</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="thumb">
+                        <header class="thumb-header">
+                            <i class="fa fa-send box-icon-black round box-icon-big animate-icon-top-to-bottom"></i>
+                        </header>
+                        <div class="thumb-caption">
+                            <h5 class="thumb-title">
+                                <a class="text-darken" href="#">Best Destinations</a>
+                            </h5>
+                            <p class="thumb-desc">Talented workforce dedicated to providing value-added services to all our customers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="gap gap-small"></div>
+</div>
+<div class="gap"></div>
+<div class="container bg-flight-illustration">
+    <div class="row">
+        <div class="gap"></div>
+        <h2 class="text-center">Our Partners</h2>
+        <div class="gap"></div>
+        <div class="col-md-12" style="padding-left: 100px">
+            <div class="row row-wrap" data-gutter="120">
+                <div class="col-md-2">
+                    <img src="assets/img/amadeus.jpg" alt="Amadeus" title="" height="35" width="20" />
+                </div>
+                <div class="col-md-2">
+                    <img src="assets/img/tripadvisor.jpg" alt="Tripadvisor" title="" height="35" width="20" />
+                </div>
+                <div class="col-md-2">
+                    <img src="assets/img/amadeuss.jpg" alt="Verified Card" title="" height="35" width="20" />
+                </div>
+                <div class="col-md-2">
+                    <img src="assets/img/interswitch.jpg" alt="Interswitch" title="" height="35" width="20" />
+                </div>
+                <div class="col-md-2">
+                    <img src="assets/img/flutter_wave.png" alt="Flutterwave" title="" height="35" width="20" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="gap gap-small"></div>
+</div>
+
+<ng-template #popTemplate>
+    <div>
+        <p>
+            <span style="color: red" aria-hidden="true">{{travellerAlert}}</span>
+        </p>
+        <table>
+            <tr>
+                <td>Adult (Age 12+)</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button class="btn btn-danger btn-sm round" type="button" disabled *ngIf="adultTraveller == 1" (click)=" minus('Adult')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm round" *ngIf="adultTraveller > 1" (click)=" minus('Adult')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                </td>
+                <td>&nbsp;</td>
+                <td>{{adultTraveller}}</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm round" (click)=" add('Adult')">
+                        <span aria-hidden="true">+</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>&nbsp;</tr>
+            <tr>
+                <td>Child (Age 2 - 12)</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button class="btn btn-danger btn-sm round" type="button" disabled *ngIf="childTraveller == 0" (click)=" minus('Child')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm round" *ngIf="childTraveller > 0" (click)=" minus('Child')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                </td>
+                <td>&nbsp;</td>
+                <td> {{childTraveller}}</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm round" (click)=" add('Child')">
+                        <span aria-hidden="true">+</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>&nbsp;</tr>
+            <tr>
+                <td>Infant (below age 2)</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button class="btn btn-danger btn-sm round" type="button" disabled *ngIf="infantTraveller == 0" (click)=" minus('Infant')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm round" *ngIf="infantTraveller > 0" (click)=" minus('Infant')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                </td>
+                <td>&nbsp;</td>
+                <td>{{infantTraveller}}</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm round" (click)=" add('Infant')">
+                        <span aria-hidden="true">+</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>&nbsp;</tr>
+            <tr>
+                <p text-center>Total Travellers: {{totalTraveller}} </p>
+            </tr>
+        </table>
+    </div>
+</ng-template>
+<div *ngIf="isModalShown" [config]="{ show: true}" (onHidden)="onHidden()" bsModal #autoShownModal="bs-modal" class="modal fade"
+    tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </p>
+
+                <p class="mb30" style="color: red">Error retrieving search results, Please try again</p>
+            </div>
+        </div>
+    </div>
+</div>

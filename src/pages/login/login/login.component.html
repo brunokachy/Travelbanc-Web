@@ -1,0 +1,57 @@
+<div class="container">
+    <ul class="breadcrumb">
+        <li>
+            <a href="index.html">Home</a>
+        </li>
+        <li class="active">
+            Login
+        </li>
+    </ul>
+    <div class="row" data-gutter="60">
+        <div class="col-md-8">
+            <h3>Welcome to Travelbanc</h3>
+            <p>TravelBanc Limited is a travel management company that is structured to understand our clients’ needs and provide
+                the much needed services, comfort and ease in their Travels, Tours, Holidays, Ticketing, Travel Events through
+                air tickets issuance, protocol assistance, passport application and processing, visas and immigration support,
+                travel audits, discounted hotel needs and medical evacuation.</p>
+            <p>Our extensive travel experience and global expertise in travel planning is a plus for any organization. We are
+                an integrated travel management company dedicated to the provision of turnkey and excellent travel services
+                whether you are flying first class, business class and economy class or opt for any of our travel services;
+                our core objective is to provide you with world class experience which ensure you live the adventure that
+                support your budget.</p>
+        </div>
+        <div class="col-md-4">
+            <div *ngFor="let alert of alerts">
+                <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+            </div>
+            <h3>Login</h3>
+            <form (ngSubmit)="logging()" ngNativeValidate>
+                <div class="form-group form-group-icon-left">
+                    <i class="fa fa-user input-icon"></i>
+                    <label>Email</label>
+                    <input class="form-control" placeholder="your email" name="email" type="email" [(ngModel)]="user.email" />
+                </div>
+                <div *ngIf="!forgotPassword" class="form-group form-group-icon-left">
+                    <i class="fa fa-lock input-icon"></i>
+                    <label>Password</label>
+                    <input class="form-control" type="password" name="password" placeholder="your password" [(ngModel)]="user.password" />
+                </div>
+                <span *ngIf="!forgotPassword" (click)="resetPassword()" style="cursor:pointer; color: orange">
+                    Forgot Password?
+                </span>
+                <span *ngIf="forgotPassword" (click)="signin()" style="cursor:pointer; color: orange">
+                    Login?
+                </span>
+
+                <div *ngIf="!forgotPassword" class="form-group form-group-icon-left">
+                    <input class="btn btn-primary" type="submit" value="Sign in" />
+                </div>
+                <div *ngIf="forgotPassword" class="form-group form-group-icon-left">
+                    <input class="btn btn-primary" type="submit" value="Reset Password" />
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>

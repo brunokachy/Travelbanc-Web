@@ -1,0 +1,467 @@
+<div class="container">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li class="active">
+            Flight Search Result
+        </li>
+    </ul>
+    <h3 class="booking-title">{{flight.totalSearchResult}} Flights from {{flightHeader.departureAirport.cityName}} to {{flightHeader.destinationAirport.cityName}}
+        on {{formateDate3(flightHeader.depatureDate)}} for {{flightHeader.totalTravelers}}
+        <small>
+            <a class="popup-text" href="#" data-toggle="modal" (click)="openSearchModal(template)">Change search</a>
+        </small>
+    </h3>
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-xs-12">
+            <aside class="booking-filters text-white">
+                <h4>Filter By:</h4>
+                <ul class="list booking-filters-list">
+                    <li>
+                        <h5 class="booking-filters-title">Stops
+                            <!-- <small>Price from</small> -->
+                        </h5>
+                        <div class="radio">
+                            <label>
+                                <input class="i-check" name="stops" (change)="selectStops(-1)" type="radio" checked/>SHOW ALL
+                                <!-- <span class="pull-right">NGN 300,000</span> -->
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input class="i-check" name="stops" (change)="selectStops(0)" type="radio" />Non-stop
+                                <!-- <span class="pull-right">NGN 300,000</span> -->
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input class="i-check" name="stops" (change)="selectStops(1)" type="radio" />1 Stop
+                                <!-- <span class="pull-right">NGN 280,000</span> -->
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input class="i-check" name="stops" (change)="selectStops(2)" type="radio" />2+ Stops
+                                <!-- <span class="pull-right">NGN 160,000</span> -->
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <h5 class="booking-filters-title">Airlines
+                            <small>Price from</small>
+                        </h5>
+                        <div class="radio">
+                            <label>
+                                <input class="i-check" type="radio" name="airline" (change)="selectAirline(0)" checked />SHOW ALL
+                            </label>
+                        </div>
+                        <div class="radio" *ngFor="let a of airlines; let i = index">
+                            <label>
+                                <input class="i-check" type="radio" name="airline" (change)="selectAirline(a)" />{{a.name}}
+                                <span class="pull-right">&#8358;{{formatCurrency(a.minPrice) | number}}</span>
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+        <div class="col-lg-9 col-md-9">
+            <div class="nav-drop booking-sort">
+                <h5 class="booking-sort-title">
+                    Sort flights by:
+                    <select class="nav-drop-menu" (change)="sort()" class="form-control" name="sortValue" id="sortValue" [(ngModel)]="sortValue">
+                        <option value="Lowest Price">Price(low to high)</option>
+                        <option value="Highest Price">Price(high to low)</option>
+                        <option value="Earliest Departure">Earliest Departure</option>
+                        <option value="Latest Departure">Latest Departure</option>
+                    </select>
+                </h5>
+            </div>
+            <ul class="booking-list">
+                <li *ngFor="let i of pricedItineraries">
+                    <div class="booking-item-container">
+                        <div class="booking-item">
+                            <div class="row" *ngFor="let o of i.originDestinationOptions; let l = index">
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <div class="booking-item-airline-logo">
+                                            <img src="https://api.travelbeta.com/get-airline-image/{{i.originDestinationOptions[0].flightSegments[0].airlineCode}}" alt="Image Alternative text"
+                                                title="Image Title" />
+                                            <p>{{i.originDestinationOptions[0].flightSegments[0].airlineName}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="booking-item-flight-details">
+                                            <div class="booking-item-departure">
+                                                <i class="fa fa-plane"></i>
+                                                <h5>{{formatTime3(o.flightSegments[0].departureTime)}}hrs</h5>
+                                                <p class="booking-item-date">{{formatDate2(o.flightSegments[0].departureTime)}}</p>
+                                                <p class="booking-item-destination">{{formatFlightLocation(o.flightSegments[0].departureAirportName)}}, {{formatFlightCountry(o.flightSegments[0].departureAirportName)}}
+                                                    ({{o.flightSegments[0].departureAirportCode}})
+                                                </p>
+                                            </div>
+                                            <div class="booking-item-arrival" *ngIf="o.flightSegments[1] == null">
+                                                <i class="fa fa-plane fa-flip-vertical"></i>
+                                                <h5>{{formatTime3(o.flightSegments[0].arrivalTime)}}hrs</h5>
+                                                <p class="booking-item-date">{{formatDate2(o.flightSegments[0].arrivalTime)}}</p>
+                                                <p class="booking-item-destination">{{formatFlightLocation(o.flightSegments[0].arrivalAirportName)}}, {{formatFlightCountry(o.flightSegments[0].arrivalAirportName)}}
+                                                    ({{o.flightSegments[0].arrivalAirportCode}})
+                                                </p>
+                                            </div>
+                                            <div class="booking-item-arrival" *ngIf="o.flightSegments[2] == null && o.flightSegments[1] != null">
+                                                <i class="fa fa-plane fa-flip-vertical"></i>
+                                                <h5>{{formatTime3(o.flightSegments[1].arrivalTime)}}hrs</h5>
+                                                <p class="booking-item-date">{{formatDate2(o.flightSegments[1].arrivalTime)}}</p>
+                                                <p class="booking-item-destination">{{formatFlightLocation(o.flightSegments[1].arrivalAirportName)}}, {{formatFlightCountry(o.flightSegments[1].arrivalAirportName)}}
+                                                    ({{o.flightSegments[1].arrivalAirportCode}})
+                                                </p>
+                                            </div>
+                                            <div class="booking-item-arrival" *ngIf="o.flightSegments[2] != null">
+                                                <i class="fa fa-plane fa-flip-vertical"></i>
+                                                <h5>{{formatTime3(o.flightSegments[2].arrivalTime)}}hrs</h5>
+                                                <p class="booking-item-date">{{formatDate2(o.flightSegments[2].arrivalTime)}}</p>
+                                                <p class="booking-item-destination">{{formatFlightLocation(o.flightSegments[2].arrivalAirportName)}}, {{formatFlightCountry(o.flightSegments[2].arrivalAirportName)}}
+                                                    ({{o.flightSegments[2].arrivalAirportCode}})
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 stop-duration text-right">
+                                        <h5>{{formatSegmentDuration(o)}}</h5>
+                                        <p>{{formatStops(o.stops)}}</p>
+                                    </div>
+
+                                    <div class="col-md-3 text-right" *ngIf="l == 0">
+                                        <span class="booking-item-price">&#8358;{{formatCurrency(i.totalFare) | number}}</span>
+
+                                        <p class="booking-item-flight-class"> {{flightHeader.ticketClass}}, {{flightHeader.tripType}}
+                                            <span class="booking-item-people">/person</span>
+                                        </p>
+                                        <a class="btn btn-primary" (click)="selectFlight(i)">Select</a>
+                                    </div>
+                                    <div class="col-md-1" *ngIf="l == 0">
+                                        <i class="fa fa-chevron-down" (click)="i.sequencyNumber = !i.sequencyNumber"></i>
+                                    </div>
+                                </div>
+                                <p>&nbsp;</p>
+                                <div class="row" [collapse]="i.sequencyNumber">
+                                    <div class="col-md-12" *ngFor="let f of o.flightSegments; let m = index">
+                                        <h5 class="list-title">{{f.departureAirportName}} ({{f.departureAirportCode}}) - {{f.arrivalAirportName}}
+                                            ({{f.arrivalAirportCode}})
+                                        </h5>
+                                        <ul class="list">
+                                            <li class="text-brown flights__timing">{{formatTime3(f.departureTime)}}hrs - {{formatTime3(f.arrivalTime)}}hrs
+                                                <span class="flights__separator"></span>
+                                                <span class="text-color"> Duration: {{formatDuration(f.departureTime, f.arrivalTime)}}</span>
+                                            </li>
+                                            <li class="text-semi-nude f12">{{flightHeader.ticketClass}}
+                                                <span class="flights__separator"></span> {{f.airlineName}} {{f.flightNumber}}
+                                                <span class="flights__separator"></span> Coach Class ({{f.bookingClass}}), AIRBUS INDUSTRIE A330-300 </li>
+                                            <p *ngIf="o.flightSegments[m + 1] == null">&nbsp;</p>
+                                        </ul>
+                                        <h5 *ngIf="o.flightSegments[m + 1] != null" class="flights__stopover">{{calculateLayoverTime(f.arrivalTime, o.flightSegments[m + 1].departureTime)}} stopover
+                                            <span class="flights__separator"></span> {{f.arrivalAirportName}} ({{f.arrivalAirportCode}}) </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <p class="text-right">Not what you're looking for?
+                <a class="popup-text" href="#" data-toggle="modal" (click)="openSearchModal(template)">Try your search again</a>
+            </p>
+        </div>
+    </div>
+    <div class="gap"></div>
+</div>
+
+<ng-template #template>
+    <div class="modal-content  modal-lg">
+        <div class="modal-body">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="tabbable">
+                <ul class="nav nav-pills nav-sm nav-no-br mb10" id="flightChooseTab">
+                    <li [class.active]="flightHeader.tripType == 'One-way Trip'">
+                        <a href="#flight-search-1" data-toggle="tab">One Way</a>
+                    </li>
+                    <li [class.active]="flightHeader.tripType == 'Round Trip'">
+                        <a href="#flight-search-2" data-toggle="tab">Round Trip</a>
+                    </li>
+                    <li [class.active]="flightHeader.tripType == 'Multi Trip'">
+                        <a href="#flight-search-3" data-toggle="tab">Multiple Trip</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div [class.active]="flightHeader.tripType == 'One-way Trip'" [class.in]="flightHeader.tripType == 'One-way Trip'" class="tab-pane fade"
+                        id="flight-search-1">
+                        <form (ngSubmit)="searchFlight('1')" autocomplete="off" ngNativeValidate>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <i class="fa fa-plane input-icon"></i>
+                                        <label>Flying from</label>
+                                        <input [(ngModel)]="departureCity" name="departureCity" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
+                                            [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName" placeholder="Enter name of city or airport"
+                                            class="typeahead form-control" [typeaheadMinLength]="2" (ngModelChange)="checkInput($event)"
+                                            typeaheadWaitMs="2000" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <i class="fa fa-plane fa-flip-vertical input-icon"></i>
+                                        <label>Flying to</label>
+                                        <input type="text" class="typeahead form-control" [(ngModel)]="destinationCity" name="destinationCity" placeholder="Enter name of city or airport"
+                                            [typeaheadMinLength]="2" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelect($event, 'Destination')"
+                                            [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName" (ngModelChange)="checkInput($event)"
+                                            typeaheadWaitMs="2000" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <label>Seat Class</label>
+                                        <select class="form-control" name="seatclass" id="seatclass" [(ngModel)]="seatclass" required>
+                                            <option value="1">Economy</option>
+                                            <option value="3">Business</option>
+                                            <option value="4">First Class</option>
+                                            <option value="2">Premium</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <label for="name">No. of Passengers</label>
+                                        <input type="text" class="form-control" [outsideClick]="true" [popover]="popTemplate" name="totalTravellers" id="totalTravellers"
+                                            [value]="getTotalTraveller()">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                                        <label>Departure</label>
+                                        <input type="text" class="date-pick form-control" name="departureDate" placeholder="Departure date" [maxDate]="maxDepartureDate"
+                                            [minDate]="minDepartureDate" [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                            required [(ngModel)]="departureDate" bsDatepicker> </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-lg" type="submit">Search for Flights</button>
+                        </form>
+                    </div>
+                    <div [class.active]="flightHeader.tripType == 'Round Trip'" [class.in]="flightHeader.tripType == 'Round Trip'" class="tab-pane fade"
+                        id="flight-search-2">
+                        <form autocomplete="off" (ngSubmit)="searchFlight('2')" ngNativeValidate>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <i class="fa fa-plane input-icon"></i>
+                                        <label>Flying from</label>
+                                        <input [(ngModel)]="departureCity" name="departureCity" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelect($event, 'Departure')"
+                                            [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName" placeholder="Enter name of city or airport"
+                                            class="typeahead form-control" [typeaheadMinLength]="2" (ngModelChange)="checkInput($event)"
+                                            typeaheadWaitMs="2000" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <i class="fa fa-plane fa-flip-vertical input-icon"></i>
+                                        <label>Flying to</label>
+                                        <input type="text" class="typeahead form-control" [(ngModel)]="destinationCity" name="destinationCity" placeholder="Enter name of city or airport"
+                                            [typeaheadMinLength]="2" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelect($event, 'Destination')"
+                                            [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName" (ngModelChange)="checkInput($event)"
+                                            typeaheadWaitMs="2000" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <label>Seat Class</label>
+                                        <select class="form-control" name="seatclass" id="seatclass" [(ngModel)]="seatclass" required>
+                                            <option value="1">Economy</option>
+                                            <option value="3">Business</option>
+                                            <option value="4">First Class</option>
+                                            <option value="2">Premium</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <label for="name">No. of Passengers</label>
+                                        <input type="text" class="form-control" [outsideClick]="true" [popover]="popTemplate" name="totalTravellers" id="totalTravellers"
+                                            [value]="getTotalTraveller()">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                                        <label>Departure</label>
+                                        <input type="text" (change)="formatReturnDate($event)" class="date-pick form-control" name="departureDate" placeholder="Departure date"
+                                            [maxDate]="maxDepartureDate" [minDate]="minDepartureDate" [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                            required [(ngModel)]="departureDate" bsDatepicker> </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                                        <label>Return</label>
+                                        <input type="text" class="date-pick form-control" name="returnDate" id="returnDate" placeholder="Return date" required [maxDate]="maxReturnDate"
+                                            [minDate]="minReturnDate" [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                            [(ngModel)]="returnDate" bsDatepicker>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-lg" type="submit">Search for Flights</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="flight-search-3" [class.active]="flightHeader.tripType == 'Multi Trip'" [class.in]="flightHeader.tripType == 'Multi Trip'">
+                        <form autocomplete="off" (ngSubmit)="searchFlight('3')" ngNativeValidate>
+                            <div class="row" *ngFor="let u of multipleDest; let i = index">
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <i class="fa fa-plane input-icon"></i>
+                                        <label>Flying from</label>
+                                        <input ngModel name="departureCity{{i}}" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelectM($event, 'Departure', i)"
+                                            [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName" placeholder="Enter name of city or airport"
+                                            class="typeahead form-control" [typeaheadMinLength]="2" (ngModelChange)="checkInput($event)"
+                                            typeaheadWaitMs="2000" required/>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <i class="fa fa-plane fa-flip-vertical input-icon"></i>
+                                        <label>Flying to</label>
+                                        <input type="text" class="typeahead form-control" ngModel name="destinationCity{{i}}" placeholder="Enter name of city or airport"
+                                            [typeaheadMinLength]="2" [typeahead]="datasource" (typeaheadOnSelect)="typeaheadOnSelectM($event, 'Destination', i)"
+                                            [typeaheadOptionsLimit]="10" typeaheadOptionField="displayName" (ngModelChange)="checkInput($event)"
+                                            typeaheadWaitMs="2000" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                                        <label>Departure</label>
+                                        <input type="text" class="date-pick form-control" name="u.departureDate" placeholder="Departure date" [maxDate]="maxDepartureDate"
+                                            [minDate]="minDepartureDate" [bsConfig]="{dateInputFormat: 'ddd Do MMM, YYYY'}" required
+                                            [(ngModel)]="u.departureDate" bsDatepicker>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div>
+                                        <label class="control-label"> &nbsp; </label>
+                                        <button type="button" class="btn btn-success btn-sm" *ngIf="i == 0 && multipleDest.length < 4" (click)="addDestination()">
+                                            <span aria-hidden="true">+ Add</span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" *ngIf="i + 1 == multipleDest.length && i != 1" (click)="removeDestination()">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <label>No. of Passengers</label>
+                                        <input type="text" class="form-control" [outsideClick]="true" [popover]="popTemplate" name="totalTravellers" id="totalTravellers"
+                                            required [value]="getTotalTraveller()">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group form-group-lg form-group-icon-left">
+                                        <label>Seat Class</label>
+                                        <select class="form-control" name="seatclass" id="seatclass" [(ngModel)]="seatclass" required>
+                                            <option value="1">Economy</option>
+                                            <option value="3">Business</option>
+                                            <option value="4">First Class</option>
+                                            <option value="2">Premium</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-lg" type="submit">Search for Flights</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #popTemplate>
+    <div>
+        <p>
+            <span style="color: red" aria-hidden="true">{{travellerAlert}}</span>
+        </p>
+        <table>
+            <tr>
+                <td>Adult (Age 12+)</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button class="btn btn-danger btn-sm round" type="button" disabled *ngIf="adultTraveller == 1" (click)=" minus('Adult')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm round" *ngIf="adultTraveller > 1" (click)=" minus('Adult')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                </td>
+                <td>&nbsp;</td>
+                <td>{{adultTraveller}}</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm round" (click)=" add('Adult')">
+                        <span aria-hidden="true">+</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>&nbsp;</tr>
+            <tr>
+                <td>Child (Age 2 - 12)</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button class="btn btn-danger btn-sm round" type="button" disabled *ngIf="childTraveller == 0" (click)=" minus('Child')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm round" *ngIf="childTraveller > 0" (click)=" minus('Child')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                </td>
+                <td>&nbsp;</td>
+                <td> {{childTraveller}}</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm round" (click)=" add('Child')">
+                        <span aria-hidden="true">+</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>&nbsp;</tr>
+            <tr>
+                <td>Infant (below age 2)</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button class="btn btn-danger btn-sm round" type="button" disabled *ngIf="infantTraveller == 0" (click)=" minus('Infant')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm round" *ngIf="infantTraveller > 0" (click)=" minus('Infant')">
+                        <span aria-hidden="true">&minus;</span>
+                    </button>
+                </td>
+                <td>&nbsp;</td>
+                <td>{{infantTraveller}}</td>
+                <td>&nbsp;</td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm round" (click)=" add('Infant')">
+                        <span aria-hidden="true">+</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>&nbsp;</tr>
+            <tr>
+                <p text-center>Total Travellers: {{totalTraveller}} </p>
+            </tr>
+        </table>
+    </div>
+</ng-template>

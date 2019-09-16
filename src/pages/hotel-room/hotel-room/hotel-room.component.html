@@ -1,0 +1,233 @@
+<div class="container">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li>
+            <a routerLink='/hotel_search_result'>Hotel Search Result</a>
+        </li>
+        <li class="active">Hotel Detail</li>
+    </ul>
+
+    <div class="booking-item-details" *ngIf="hotel == null && hotelOffer == null">
+        <header class="booking-item-header">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2 class="lh1em">Page will be loaded in a second...</h2>
+                </div>
+            </div>
+        </header>
+    </div>
+
+
+
+    <div class="booking-item-details" *ngIf="hotel != null && hotelOffer != null">
+        <header class="booking-item-header">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2 class="lh1em">{{hotel.hotelName}}</h2>
+                    <p class="lh1em text-small">
+                        <i class="fa fa-map-marker"></i> {{formatHotelAddress(hotel.fullAddress)}}</p>
+                </div>
+                <div class="col-md-4">
+                    <p class="booking-item-header-price">
+                        <small>price from</small>
+                        <span class="text-lg">&#8358;{{formatCurrency(hotel.minimumPrice) | number}}</span>/night</p>
+                </div>
+            </div>
+        </header>
+        <div class="row">
+            <div class="col-md-7">
+                <div class="responsive-slick">
+                    <carousel>
+                        <slide *ngFor="let p of hotel.imageList | slice:0:10; let index = i">
+                            <img src="{{p.imageUrl}}" alt="{{i}} slide" style="display: block; max-height: 300px; max-width: 100%;">
+                        </slide>
+                    </carousel>
+                </div>
+                <div class="gap gap-small"></div>
+                <div class="tabbable booking-details-tabbable">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="active">
+                            <a href="#tab-1" data-toggle="tab">
+                                <i class="fa fa-smile-o"></i>Hotel Overview</a>
+                        </li>
+                        <li>
+                            <a href="#facilities" data-toggle="tab">
+                                <i class="fa fa-star"></i>Facilities</a>
+                        </li>
+                        <li>
+                            <a href="#googlemap" data-toggle="tab">
+                                <i class="fa fa-map-marker"></i>Map</a>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content">
+                        <div class="gap gap-small"></div>
+                        <div class="tab-pane fade in active" id="tab-1">
+                            <h4>{{hotel.hotelName}}</h4>
+                            <h5 class="booking-item-title">Description</h5>
+                            <p class="mb30">{{hotel.description}} </p>
+                            <div *ngFor="let e of hotel.extraInformationList">
+                                <h5 class="booking-item-title">{{e.name}}</h5>
+                                <p class="mb30">{{e.detail}} </p>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="facilities">
+                            <div class="row mt20">
+                                <div class="col-md-6">
+                                    <ul class="booking-item-features booking-item-features-expand mb30 clearfix">
+                                        <li *ngFor="let f of hotel.facilityList | slice:0:8">
+                                            <i class="im {{chooseIcon(f.type)}}"></i>
+                                            <span class="booking-item-feature-title">{{f.detail}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="booking-item-features booking-item-features-expand mb30 clearfix">
+                                        <li *ngFor="let f of hotel.facilityList | slice:9:15">
+                                            <i class="im {{chooseIcon(f.type)}}"></i>
+                                            <span class="booking-item-feature-title">{{f.detail}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="googlemap">
+                            <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+                                <agm-marker [latitude]="lat" [longitude]="lng">
+                                    <agm-info-window>
+                                        <strong>{{title}}</strong>
+                                    </agm-info-window>
+                                </agm-marker>
+                                <agm-circle [latitude]="lat + 0.3" [longitude]="lng" [radius]="5000" [fillColor]="'red'" [circleDraggable]="true" [editable]="true">
+                                </agm-circle>
+                            </agm-map>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="booking-item-dates-change">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-daterange" data-date-format="MM d, D">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group form-group-icon-left">
+                                                <label>Check in </label>
+                                                <span>
+                                                    <strong>{{hotelSearch.checkInDate}}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group form-group-icon-left">
+                                                <label>Check out</label>
+                                                <span>
+                                                    <strong>{{hotelSearch.checkOutDate}}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group form-group-icon-left">
+                                                <label>No. of rooms</label>
+                                                <span>
+                                                    <strong>{{hotelSearch.numberOfRooms}}</strong>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-group-icon-left">
+                                    <label>No. of adults </label>
+                                    <span>
+                                        <strong>{{adultCount}}</strong>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-group-icon-left">
+                                    <label>No. of children</label>
+                                    <span>
+                                        <strong>{{childCount}}</strong>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <ul class="booking-list">
+                    <li *ngFor="let h of hotelOffer.offerList">
+                        <a class="booking-item">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5 class="booking-item-title">{{h.roomDescription}}</h5>
+                                    <p class="text-small">MEAL AVAILABLE: Breakfast Included</p>
+                                    <p class="text-small">ROOM TYPE: {{h.roomType}}</p>
+
+                                    <ul class="booking-item-features booking-item-features-expand mb30 clearfix">
+                                        <li>
+                                            <span>Cancellation Status:
+                                                <span class="text-small">{{h.cancellationRule}} </span>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span>Refund Status:
+                                                <span class="text-small">{{h.refundRule}} </span>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                    <a class="popup-text" href="#" data-toggle="modal" (click)="openSearchModal(template, h)">
+                                        <p class="text-small">View Extra Detail</p>
+                                    </a>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="booking-item-price">&#8358;{{formatCurrency(h.price) | number}}</span>
+                                    <br>
+                                    <span>/night</span>
+                                    <br>
+                                    <span (click)="selectRoom(h)" class="btn btn-primary">Book</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+<ng-template #template>
+    <div class="modal-content  modal-lg">
+        <div class="modal-body">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div *ngFor="let e of room.extraInformationList">
+                <h5 class="booking-item-title">{{e.name}}</h5>
+                <p class="mb30">{{e.detail}} </p>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<div *ngIf="isModalShown" [config]="{ show: true}" (onHidden)="onHidden()" bsModal #autoShownModal="bs-modal" class="modal fade"
+    tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p class="mb30" style="color: red">Sorry, the hotel room is no longer available.</p>
+            </div>
+        </div>
+    </div>
+</div>

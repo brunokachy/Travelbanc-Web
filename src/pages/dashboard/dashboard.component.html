@@ -1,0 +1,114 @@
+<div class="container">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li class="active">
+            Dashboard
+        </li>
+    </ul>
+    <div class="row">
+        <div class="col-md-3">
+            <aside class="booking-filters text-white">
+                <ul class="list booking-filters-list">
+                    <li>
+                        <a routerLink='/dashboard'>
+                            <h5 class="booking-filters-title">Dashboard
+                            </h5>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink='/profile'>
+                            <h5 class="booking-filters-title">Profile Update
+                            </h5>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink='/password_change'>
+                            <h5 class="booking-filters-title">Change Password
+                            </h5>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+        <div class="col-md-9">
+            <div class="col-md-5">
+                <div class="boxed-form">
+                    <div class="booking-item-payment">
+                        <header class="clearfix">
+                            <h5 class="mb0">Flight Booking</h5>
+                        </header>
+                        <div style="text-align: center">
+                            <h1>[{{flightCount}}]</h1>
+                        </div>
+                        <div style="text-align: center">
+                            <a (click)="goToBookingPage('flight')" class="btn btn-primary">Click to Book Flight</a>
+                        </div>
+                        <div class="gap gap-small"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5">
+                <div class="boxed-form">
+                    <div class="booking-item-payment">
+                        <header class="clearfix">
+                            <h5 class="mb0">Hotel Booking</h5>
+                        </header>
+                        <div style="text-align: center">
+                            <h1>[{{hotelCount}}]</h1>
+                        </div>
+                        <div style="text-align: center">
+                            <a (click)="goToBookingPage('hotel')" class="btn btn-primary">Click to Book Hotel</a>
+                        </div>
+                        <div class="gap gap-small"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="gap"></div>
+
+
+            <div class="col-md-7">
+                <div class="boxed-form">
+                    <header>Recent Bookings
+                        <span class="badge badge-info">{{bookingCount}}</span>
+                    </header>
+                    <div class="row boxed-form-contents">
+                        <div *ngIf="bookings.length > 0" class="table-responsive">
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr *ngFor="let b of bookings">
+                                        <td>
+                                            <span *ngIf="b.reservationType == 'FLIGHT'" class="fa fa-plane" style="font-size: 1.6em;"></span>
+                                            <span *ngIf="b.reservationType == 'HOTEL'" class="fa fa-building-o" style="font-size: 1.6em;"></span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <strong>{{b.title}}</strong>
+                                                <br>{{b.description}} </span>
+                                        </td>
+                                        <td>{{b.dateCreated | date}}</td>
+                                        <td> &#8358;{{formatCurrency(b.amount) | number}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p *ngIf="bookings.length == 0" style="text-align: center">You have no bookings</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="boxed-form">
+                    <header>Notification
+                        <span class="badge badge-info">0</span>
+                    </header>
+                    <div class="row boxed-form-contents">
+                        <p style="text-align: center">You have no notifications</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="gap"></div>
+</div>

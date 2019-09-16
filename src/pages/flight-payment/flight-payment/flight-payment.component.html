@@ -1,0 +1,232 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h3>Payment Methods</h3>
+            <div class="tabbable booking-details-tabbable">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li>
+                        <a href="#bank-account" data-toggle="tab">
+                            <i class="fa fa-camera"></i>Bank Account Payment</a>
+                    </li>
+                    <li class="active">
+                        <a href="#domestic-card" data-toggle="tab">
+                            <i class="fa fa-map-marker"></i>Card Payment</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="gap gap-small"></div>
+                    <div class="tab-pane fade" id="bank-account">
+                        <h4>How to pay into our bank account</h4>
+                        <p class="mb30">Make a direct payment into any of the accounts below. You can still make transfer to our bank account
+                            from your banking mobile application </p>
+                        <div class="col-md-6">
+                            <img class="pp-img" src="assets/img/keystone.png" alt="Keystone bank Logo" title="" />
+                            <p>Keystone Bank
+                                <br> Account Name:
+                                <strong>TravelBanc Limited</strong>
+                                <br> Account Number:
+                                <strong>1007019839</strong>
+                            </p>
+                            <button (click)="goHome()" class="btn btn-primary">Return Home</button>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade in active" id="domestic-card">
+                        <div class="row mt20">
+                            <div class="col-md-6">
+                                <img class="pp-img" src="assets/img/flutter_wave.png" alt="Ravepay Logo" title="" />
+                                <p>Ravepay
+                                    <br> Booking Amount: &#8358;{{formatCurrency(pricedItinerary.totalFare) | number}}
+                                    <br> Transaction Charge: &#8358;0.00
+                                    <br> Booking Total:
+                                    <strong>&#8358;{{formatCurrency(pricedItinerary.totalFare) | number}}</strong>
+                                </p>
+                                <button (click)="ravePay()" class="btn btn-primary">Pay via Ravepay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="gap gap-small"></div>
+            <div class="gap gap-small"></div>
+        </div>
+
+        <div class="col-md-4 aside-stick">
+            <div class="booking-item-payment">
+                <header class="clearfix">
+                    <a class="booking-item-payment-img" href="#">
+                        <img src="https://api.travelbeta.com/get-airline-image/{{pricedItinerary.originDestinationOptions[0].flightSegments[0].airlineCode}}"
+                            alt="Image Alternative text" title="Image Title" />
+                    </a>
+                    <h5 class="mb0">Flight Itinerary</h5>
+                </header>
+                <ul class="booking-item-payment-details">
+                    <li *ngFor="let o of pricedItinerary.originDestinationOptions; let l = index">
+                        <header class="clearfix" *ngIf="o.flightSegments[1] == null">
+                            <h5 class="mb0">{{formatFlightLocation(o.flightSegments[0].departureAirportName)}} - {{formatFlightLocation(o.flightSegments[0].arrivalAirportName)}}</h5>
+                        </header>
+                        <header class="clearfix" *ngIf="o.flightSegments[2] == null && o.flightSegments[1] != null">
+                            <h5 class="mb0">{{formatFlightLocation(o.flightSegments[0].departureAirportName)}} - {{formatFlightLocation(o.flightSegments[1].arrivalAirportName)}}</h5>
+                        </header>
+                        <header class="clearfix" *ngIf="o.flightSegments[2] != null">
+                            <h5 class="mb0">{{formatFlightLocation(o.flightSegments[0].departureAirportName)}} - {{formatFlightLocation(o.flightSegments[2].arrivalAirportName)}}</h5>
+                        </header>
+                        <div class="booking-item-payment-flight" *ngFor="let i of o.flightSegments; let m = index">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="booking-item-flight-details">
+                                        <div class="booking-item-departure">
+                                            <i class="fa fa-plane"></i>
+                                            <h5>{{formatTime2(i.departureTime)}}hrs</h5>
+                                            <p class="booking-item-date">{{formatDate2(i.departureTime)}}</p>
+                                            <p class="f11 booking-item-destination"> {{i.departureAirportName}} ({{i.departureAirportCode}})</p>
+                                        </div>
+                                        <div class="booking-item-arrival">
+                                            <i class="fa fa-plane fa-flip-vertical"></i>
+                                            <h5>{{formatTime2(i.arrivalTime)}}hrs</h5>
+                                            <p class="booking-item-date">{{formatDate2(i.arrivalTime)}}</p>
+                                            <p class="f11 booking-item-destination">{{i.arrivalAirportName}} ({{i.arrivalAirportCode}})</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="booking-item-flight-duration">
+                                        <p>Duration</p>
+                                        <h6>{{formatDuration(i.departureTime, i.arrivalTime)}}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 *ngIf="o.flightSegments[m + 1] != null" class="flights__stopover text-center">{{calculateLayoverTime(i.arrivalTime, o.flightSegments[m + 1].departureTime)}} stopover
+                                <span class="flights__separator"></span> ({{i.arrivalAirportCode}}) </h5>
+                        </div>
+                    </li>
+                    <!-- <div class="row details-divider-flight">
+                        <div class="col-md-12">
+                            <h5>Flight ({{pricedItinerary.fareBreakDown.numberOfTravellers}} Passengers)</h5>
+                        </div>
+                    </div> -->
+                    <li>
+                        <ul class="booking-item-payment-price">
+                            <!-- <div class="row">
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">Adult
+                                            <small>x {{pricedItinerary.fareBreakDown.numberOfAdults}}</small>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-------------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">&#8358;{{formatCurrency(pricedItinerary.fareBreakDown.adultBaseFareInKobo)|number}}
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">Adult Taxes</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-------------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">&#8358;{{formatCurrency(pricedItinerary.fareBreakDown.adultTotalTaxInKobo)|number}}
+                                        </p>
+                                    </div>
+                                </li>
+                            </div> -->
+                            <!-- <div class="row" *ngIf="pricedItinerary.fareBreakDown.numberOfChildren > 0">
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">Child
+                                            <small>x {{pricedItinerary.fareBreakDown.numberOfChildren}}</small>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-------------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">&#8358;{{formatCurrency(pricedItinerary.fareBreakDown.childBaseFareInKobo)|number}}
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">Child Taxes</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-------------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">&#8358;{{formatCurrency(pricedItinerary.fareBreakDown.childTotalTaxInKobo)|number}}
+                                        </p>
+                                    </div>
+                                </li>
+                            </div> -->
+                            <!-- <div class="row" *ngIf="pricedItinerary.fareBreakDown.numberOfInfant > 0">
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">Infant
+                                            <small>x {{pricedItinerary.fareBreakDown.numberOfInfant}}</small>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-------------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">&#8358;{{formatCurrency(pricedItinerary.fareBreakDown.infantBaseFareInKobo)|number}}
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">Child Taxes</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-------------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">&#8358;{{formatCurrency(pricedItinerary.fareBreakDown.infantTotalTaxInKobo)|number}}
+                                        </p>
+                                    </div>
+                                </li>
+                            </div> -->
+                            <div class="row">
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">Booking Number</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-------------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">{{bookingResponse.bookingNumber}}
+                                        </p>
+                                    </div>
+                                </li>
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">Booking Ref.</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-------------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">{{bookingResponse.referenceNumber}}
+                                        </p>
+                                    </div>
+                                </li>
+                            </div>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="col-md-6 booking-item-payment-total">Total Amount:</span>
+                        <span class="col-md-6 total-payable-amount">&#8358;{{formatCurrency(pricedItinerary.totalFare) | number}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

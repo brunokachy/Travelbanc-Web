@@ -1,0 +1,188 @@
+<header>
+    <div class="header-top" style="background: #7C423F">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="top-user-area-list list list-horizontal list-border">
+                        <li>
+                            <a href="#" style="color: ghostwhite">
+                                <i class="fa fa-phone" aria-hidden="true"></i> 09090000064</a>
+                        </li>
+                        <li>
+                            &nbsp;
+                        </li>
+                        <li>
+                            <a style="color: ghostwhite" href="mailto:info@mytravelbanc.com">
+                                <i class="fa fa-envelope" aria-hidden="true"></i>info@mytravelbanc.com</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<header id="main-header">
+    <div class="header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <a class="logo" href='#'>
+                        <img src="assets/img/travelbanc-logo-coloured.png" alt="Image Alternative text" title="Image Title" />
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <div class="top-user-area clearfix">
+                        <ul *ngIf="isLogin" class="top-user-area-list list list-horizontal list-border">
+                            <li class="top-user-area-avatar">
+                                <a href='#'> Hi, {{firstname}}</a>
+                            </li>
+                            <li class="top-user-area-avatar">
+                                <a routerLink='/dashboard'> My Account</a>
+                            </li>
+                            <li>
+                                <span (click)="signOut()" style="cursor:pointer">
+                                    Sign Out
+                                </span>
+                            </li>
+                        </ul>
+                        <ul *ngIf="!isLogin" class="top-user-area-list list list-horizontal list-border">
+                            <li class="top-user-area-avatar">
+                                <a routerLink='/register'> Register</a>
+                            </li>
+                            <li>
+                                <a routerLink='/signin'>Sign In</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="gap gap-small" style="color: ghostwhite"></div>
+            <div class="row">
+                <marquee style="color: red; text-transform: uppercase">Red Hot Alert!!!
+                    <i class="fa-futbol"></i>
+                    <i class="fas fa-futbol"></i>
+                    <i class="fas fa-futbol"></i> Experience Russia with the eagles! 2018 world Cup Packages starting &#x20A6;1.5m | **Enjoy amazing
+                    flight fares on virgin atlantic... Lagos to new york - &#x20A6;400,000… Lagos to London - &#x20A6;339,000
+                    | **Selling fast! Lagos - Dubai at &#x20A6;215,900 on Etihad Airways. Book before 31st March to travel
+                    between 1st March - 31 May... Call 09090000064 to book </marquee>
+            </div> -->
+        </div>
+    </div>
+    <!-- <div class="gap" style="color: ghostwhite"></div> -->
+</header>
+
+<router-outlet></router-outlet>
+<ngx-spinner loadingText="Please wait, we are finding the best deals for you..." bdColor="rgba(51, 51, 51, 0.8)" size="large"
+    color="#fff" type="timer"></ngx-spinner>
+<div class="gap"></div>
+<footer id="main-footer">
+    <div class="container">
+        <div class="row row-wrap">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="col-md-4">
+                    <img src="assets/img/Screenshot_20180603-052554.png" alt="Travelbanc Mobile Image" title="Travelbanc Mobile Image" />
+                </div>
+                <div class="col-md-8">
+                    <h4 style="text-align: center">Download our mobile app</h4>
+                    <label style="text-align: center">Enter your phone number below to download our amazing app</label>
+                    <form class="form-inline" (ngSubmit)="sendApk()" ngNativeValidate>
+                        <div class="input-group">
+                            <select class="form-control" name="countryCode" [(ngModel)]="countryCode" required>
+                                <option [value]="c.dialingCode" *ngFor="let c of countries">{{c.name}}({{c.dialingCode}}) </option>
+                            </select>
+                            <span class="input-group-addon" style="width:2px; padding-left:0px; padding-right:0px; border:none;"></span>
+                            <input type="text" class="form-control" name="phoneNumber" [(ngModel)]="phoneNumber" required>
+                            <span class="input-group-addon" style="width:2px; padding-left:0px; padding-right:0px; border:none;"></span>
+                        </div>
+                        <input type="submit" style="margin-top: 3px" class="btn btn-primary" value="Send">
+                    </form>
+                    <p style="text-align: center" class="mt5">
+                        or download it right away
+                    </p>
+                    <a target="_blank" class="logo" href='https://play.google.com/store/apps/details?id=com.travelbanc.app'>
+                        <img src="assets/img/playstore.png" alt="Travelbanc Logo" title="Travelbanc Logo" />
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+   
+    <div class="container">
+        <div class="row row-wrap">
+            <div class="col-md-3">
+                <a class="logo" href='#' (click)="home()">
+                    <img src="assets/img/logo-footer.png" alt="Travelbanc Logo" title="Travelbanc Logo" />
+                </a>
+                <p class="mb20">TravelBanc is a travel management company that offers you the most amazing tours around the world</p>
+                <ul class="list list-horizontal list-space icon-footer">
+                    <li>
+                        <a target="_blank" class="fa fa-facebook box-icon-normal round animate-icon-bottom-to-top" href="https://www.facebook.com/travelbanc/"></a>
+                    </li>
+                    <li>
+                        <a target="_blank" class="fa fa-twitter box-icon-normal round animate-icon-bottom-to-top" href="https://www.twitter.com/Travelbanc"></a>
+                    </li>
+                    <!-- <li>
+                        <a target="_blank" class="fa fa-google-plus box-icon-normal round animate-icon-bottom-to-top" href="#"></a>
+                    </li>
+                    <li>
+                        <a target="_blank" class="fa fa-linkedin box-icon-normal round animate-icon-bottom-to-top" href="#"></a>
+                    </li> -->
+                    <li>
+                        <a target="_blank" class="fa fa-instagram box-icon-normal round animate-icon-bottom-to-top" href="https://www.instagram.com/travelbanc/"></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-md-3">
+                <h4>Newsletter</h4>
+                <form>
+                    <label>Enter your E-mail Address</label>
+                    <input type="text" class="form-control">
+                    <p class="mt5">
+                        <small>*We Never Send Spam</small>
+                    </p>
+                    <input type="submit" class="btn btn-primary" value="Subscribe">
+                </form>
+            </div>
+            <div class="col-md-2">
+                <ul class="list list-footer">
+                    <li>
+                        <a routerLink='/about'>About Us</a>
+                    </li>
+                    <li>
+                        <a routerLink='/contactus'>
+                            Contact Us
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Privacy Policy
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">Terms of Use
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"> Vacation Packages</a>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h4>Have Questions?</h4>
+                <h4 class="text-color">+234(0)9090000064</h4>
+                <h4>
+                    <a class="text-color" href="mailto:info@mytravelbanc.com">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>info@mytravelbanc.com</a>
+                </h4>
+                <p>24/7 Dedicated Customer Support</p>
+            </div>
+
+
+        </div>
+    </div>
+</footer>

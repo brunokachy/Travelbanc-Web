@@ -1,0 +1,283 @@
+<div class="container">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li>
+            <a routerLink='/hotel_search_result'>Hotel Search Result</a>
+        </li>
+        <li>
+            <a routerLink='/hotel_room'>Hotel Rooms</a>
+        </li>
+        <li class="active">Hotel Booking</li>
+    </ul>
+    <div class="row">
+        <form (ngSubmit)="proceed()" ngNativeValidate>
+            <div class="col-md-8">
+                <h3>Hotel Booking</h3>
+                <p *ngIf="!login">To book faster,
+                    <a class="popup-text" href="#" data-toggle="modal" (click)="openSearchModal(template)">sign in to your TravelBanc Account</a>.</p>
+                <div class="boxed-form">
+                    <header>Customer Account</header>
+                    <div class="boxed-form-contents">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <select class="form-control" name="title" [(ngModel)]="contactDetail.title" required>
+                                        <option value="4">Mr</option>
+                                        <option value="3">Mrs</option>
+                                       <option value="1">Miss</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>First name</label>
+                                    <input [(ngModel)]="contactDetail.firstName" type="text" name="firstName" class="form-control" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Last name</label>
+                                    <input [(ngModel)]="contactDetail.lastName" type="text" name="lastName" class="form-control" required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Date of birth</label>
+                                    <input type="text" class="form-control" name="birthday" [maxDate]="maxAdultBday" [bsConfig]="{dateInputFormat: 'DD/MM/YYYY', containerClass: 'theme-orange'}"
+                                    [(ngModel)]="contactDetail.dateOfBirth" required bsDatepicker>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input [(ngModel)]="contactDetail.email" type="email" name="email" class="form-control" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Phone number</label>
+                                    <input [(ngModel)]="contactPhoneNumber" type="tel" name="phoneNumber" class="form-control" required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <textarea name="address" [(ngModel)]="contactDetail.address" rows="4" cols="50" class="form-control" minlength="10" required> </textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>City</label>
+                                    <input [(ngModel)]="contactDetail.city" type="text" name="city" class="form-control" required/>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <select class="form-control" name="country" [(ngModel)]="contactDetail.countryName" required>
+                                        <option *ngFor="let c of countries">{{c.name}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!login" class="checkbox">
+                            <label>
+                                <input class="i-check" name="shouldRegister" type="checkbox" [(ngModel)]="shouldRegister" checked/>Create traveller account
+                                <small>(account activation link will be send to your e-mail)</small>
+                            </label>
+                        </div>
+                        <div *ngIf="shouldRegister" class="form-group form-group-icon-left">
+                            <i class="fa fa-lock input-icon"></i>
+                            <label>Password</label>
+                            <input class="form-control" type="password" placeholder="your password" name="password" [(ngModel)]="password" required/>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="gap gap-small"></div>
+
+                <div class="boxed-form">
+                    <header>Guest Information</header>
+                    <div class="boxed-form-contents">
+                        <ul class="list">
+                            <li *ngFor="let u of roomDetailLists; let i = index">
+                                <h5 style="text-align: center">Room {{i + 1}}</h5>
+                                <div class="row" *ngFor="let v of u.adultList; let j = index">
+                                    <h6 style="text-align: center">
+                                        <strong>Adult {{j + 1}}</strong>
+                                        <small *ngIf="j == 0" (click)="setAdultContact()" style="cursor:pointer; color: orange">
+                                            Same as customer account?
+                                        </small>
+                                    </h6>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Title</label>
+                                            <select class="form-control" name="title{{j}}" [(ngModel)]="roomDetailLists[i].adultList[j].title" required>
+                                                <option value="4">Mr</option>
+                                                <option value="3">Mrs</option>
+                                                <option value="1">Miss</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label>First name</label>
+                                            <input [(ngModel)]="roomDetailLists[i].adultList[j].firstName" type="text" name="firstName{{j}}" class="form-control" required/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label>Last name</label>
+                                            <input [(ngModel)]="roomDetailLists[i].adultList[j].lastName" type="text" name="lastName{{j}}" class="form-control" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" *ngFor="let v of u.childrenList; let l = index">
+                                    <h6 style="text-align: center">
+                                        <strong>Child {{l + 1}}</strong>
+                                    </h6>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Title</label>
+                                            <select class="form-control" name="title{{l}}" [(ngModel)]="roomDetailLists[i].childrenList[l].title" required>
+                                                <option value="2">Master</option>
+                                                <option value="1">Miss</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label>First name</label>
+                                            <input [(ngModel)]="roomDetailLists[i].childrenList[l].firstName" type="text" name="firstName{{l}}" class="form-control" required/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label>Last name</label>
+                                            <input [(ngModel)]="roomDetailLists[i].childrenList[l].lastName" type="text" name="lastName{{l}}" class="form-control" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <small>
+                    <p>After Clicking on 'Proceed to Checkout', you will be shown a payment page where you can complete the
+                        payment
+                    </p>
+                </small>
+                <button type="submit" class="btn btn-primary btn-lg pull-right">Proceed to Checkout</button>
+            </div>
+        </form>
+
+        <div class="col-md-4">
+            <div class="booking-item-payment">
+                <header class="clearfix">
+                    <a class="booking-item-payment-img" href="#">
+                        <img src="{{hotel.imageList[0].imageUrl}}" alt="Image Alternative text" title="hotel 1">
+                    </a>
+                    <h5 class="booking-item-payment-title">
+                        <a href="#">{{hotel.hotelName}}</a>
+                    </h5>
+                    <ul class="icon-group booking-item-rating-stars">
+                        <rating [(ngModel)]="hotel.starRating" [max]="5" [readonly]="true"></rating>
+                    </ul>
+                </header>
+                <ul class="booking-item-payment-details">
+                    <li>
+                        <h5>Booking for {{nights}} nights</h5>
+                        <div class="booking-item-payment-date">
+                            <p class="booking-item-payment-date-day">{{formateDate3(hotelSearch.checkInDate)}}</p>
+                            <p class="booking-item-payment-date-weekday">{{formateDate2(hotelSearch.checkInDate)}}</p>
+                        </div>
+                        <i class="fa fa-arrow-right booking-item-payment-date-separator"></i>
+                        <div class="booking-item-payment-date">
+                            <p class="booking-item-payment-date-day">{{formateDate3(hotelSearch.checkOutDate)}}</p>
+                            <p class="booking-item-payment-date-weekday">{{formateDate2(hotelSearch.checkOutDate)}}</p>
+                        </div>
+                    </li>
+                    <div class="row details-divider-hotels">
+                        <div class="col-md-12">
+                            <h5>{{room.roomDescription}}</h5>
+                        </div>
+                    </div>
+                    <li>
+                        <ul class="booking-item-payment-price">
+                            <div class="row">
+                                <li class="col-md-12">
+                                    <div class="col-md-4 pl0">
+                                        <p class="booking-item-payment-price-title">{{nights}} Nights</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="booking-item-payment-price-seperator">-----------</p>
+                                    </div>
+                                    <div class="col-md-4 pr0 text-right">
+                                        <p class="booking-item-payment-price-amount">&#8358;{{formatCurrency(room.price) | number}}
+                                        </p>
+                                    </div>
+                                </li>
+                            </div>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="col-md-6 booking-item-payment-total">Total Amount:</span>
+                        <span class="col-md-6 total-payable-amount">&#8358;{{formatCurrency(room.price) | number}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #template>
+            <div class="modal-content  ">
+                <div class="modal-body">
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h3>Login</h3>
+                            <form (ngSubmit)="signin()" ngNativeValidate>
+                                <div class="form-group form-group-icon-left">
+                                    <i class="fa fa-user input-icon"></i>
+                                    <label>Email</label>
+                                    <input class="form-control" placeholder="your email" type="email" name="email" [(ngModel)]="email" required/>
+                                </div>
+                                <div class="form-group form-group-icon-left">
+                                    <i class="fa fa-lock input-icon"></i>
+                                    <label>Password</label>
+                                    <input class="form-control" type="password" placeholder="your password" name="email" [(ngModel)]="password" required/>
+                                </div>
+                                <input class="btn btn-primary" type="submit" value="Sign in" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+        <div *ngIf="isModalShown" [config]="{ show: true}" (onHidden)="onHidden()" bsModal #autoShownModal="bs-modal" class="modal fade"
+            tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p>
+                            <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </p>
+
+                        <p class="mb30" style="color: red; text-align: center" text-center>{{alertMessage}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>

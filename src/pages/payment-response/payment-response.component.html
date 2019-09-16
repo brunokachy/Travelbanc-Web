@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div *ngFor="let alert of alerts">
+                <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+            </div>
+            <div class="tabbable booking-details-tabbable">
+                <div class="tab-content">
+                    <div class="gap gap-small"></div>
+                    <div class="tab-pane fade in active" id="domestic-card">
+                        <div class="row mt20">
+                            <div class="col-md-12">
+                                <h4>Payment Breakdown</h4>
+                                <p>
+                                    <strong>Fare: </strong>&#8358;{{fare | number}}</p>
+                                <p>
+                                    <strong>Transaction Charge: </strong>&#8358;{{txFee | number}}</p>
+                                <p>
+                                    <strong>Total Amount: </strong>&#8358;{{totalAmount | number}}</p>
+                                <div class="gap gap-small"></div>
+                                <h4>Booking Reservation Details</h4>
+                                <p>
+                                    <strong>Payment Reference: </strong>{{paymentRef}}</p>
+                                <p>
+                                    <strong>Reference No.: </strong>{{bookingResponse.referenceNumber}}</p>
+                                <p>
+                                    <strong>Booking No.: </strong>{{bookingResponse.bookingNumber}}</p>
+                                <button (click)="goHome()" class="btn btn-primary">Return Home</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

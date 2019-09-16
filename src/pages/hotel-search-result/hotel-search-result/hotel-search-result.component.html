@@ -1,0 +1,222 @@
+<div class="container">
+    <ul class="breadcrumb">
+        <li>
+            <a href="#">Home</a>
+        </li>
+        <li class="active">
+            Hotel Search Result
+        </li>
+    </ul>
+    <h3 class="booking-title">{{hotels.totalResult}} hotels in {{hotelSearch.location.city}} on {{formateDate3(hotelSearch.checkInDate)}} - {{formateDate3(hotelSearch.checkOutDate)}}
+        <small>
+            <a class="popup-text" href="#" data-toggle="modal" (click)="openSearchModal(template)">Change search</a>
+        </small>
+    </h3>
+    <div class="row">
+        <div class="col-md-3">
+            <aside class="booking-filters text-white">
+                <h3>Filter By:</h3>
+                <ul class="list booking-filters-list">
+                    <!-- <li>
+                        <h5 class="booking-filters-title">Price</h5>
+                        <input type="text" id="price-slider">
+                    </li> -->
+                    <li>
+                        <h5 class="booking-filters-title">Star Rating</h5>
+                        <div class="radio">
+                            <label>
+                                <input class="i-check" type="radio" name="rating" (change)="selectRating('0')" checked/>Show all</label>
+                        </div>
+                        <div class="radio" *ngFor="let r of ratingList">
+                            <label>
+                                <input class="i-check" type="radio" name="rating" (change)="selectRating(r.rating)" />{{r.rating}} star ({{r.size}})</label>
+                        </div>
+                    </li>
+                    <li>
+                        <h5 class="booking-filters-title">Facility</h5>
+                        <div class="checkbox" *ngFor="let r of facilities; let i = index">
+                            <label>
+                                <input class="i-check" (change)="selectFacility($event, i)" type="checkbox" />{{r.name}}</label>
+                        </div>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+        <div class="col-md-9">
+            <div class="nav-drop booking-sort">
+                <h5 class="booking-sort-title">
+                    Sort hotels by:
+                    <select class="nav-drop-menu" (change)="sort()" class="form-control" name="sortValue" id="sortValue" [(ngModel)]="sortValue">
+                        <option value="Lowest Price">Price(low to high)</option>
+                        <option value="Highest Price">Price(high to low)</option>
+                        <option value="Highest Rating">Rating(high to low)</option>
+                    </select>
+                </h5>
+            </div>
+            <div class="row row-wrap">
+                <div class="col-md-4" *ngFor="let i of hotelList">
+                    <div class="thumb last-minute-card">
+                        <header class="thumb-header">
+                            <span style="cursor:pointer;" class="hover-img" (click)="selectHotel(i)">
+                                <img *ngIf="i.imageList.length > 0" alt="hotel-image" src="{{i.imageList[0].imageUrl}}" name="hotel-image">
+                                <img *ngIf="i.imageList.length == 0" alt="hotel-image" src="assets/img/no-imageurl.png" name="hotel-image">
+                                <h5 class="hover-title-center">Book Now</h5>
+                            </span>
+                        </header>
+                        <div class="last-minute-caption">
+                            <ul class="icon-group text-tiny text-color">
+                                <rating [(ngModel)]="i.starRating" [max]="5" [readonly]="true"></rating>
+                            </ul>
+                            <h5 class="thumb-title">
+                                <span style="cursor:pointer;" (click)="selectHotel(i)" class="text-darken">{{i.hotelName}}</span>
+                            </h5>
+                            <p class="mb0">
+                                <small>
+                                    <i class="fa fa-map-marker"></i> {{formatHotelAddress(i.fullAddress)}}</small>
+                            </p>
+                            <p class="mb0 text-darken">
+                                <span class="text-lg lh1em text-color">&#8358;{{formatCurrency(i.minimumPrice) | number}}</span>
+                                <small> per night</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-6 text-right pull-right">
+                    <p>Not what you're looking for?
+                        <a class="popup-text" href="#" data-toggle="modal" (click)="openSearchModal(template)">Try your search again</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #template>
+    <div class="modal-content  modal-lg">
+        <div class="modal-body">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <form autocomplete="off" (ngSubmit)="searchHotel()" ngNativeValidate>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group form-group-lg form-group-icon-left">
+                            <i class="fa fa-map-marker input-icon"></i>
+                            <label>City, Destination or Hotel Name</label>
+                            <input [(ngModel)]="hotel" name="hotel" [typeahead]="hotelDatasource" (typeaheadOnSelect)="typeaheadOnSelectH($event)" [typeaheadOptionsLimit]="10"
+                                typeaheadOptionField="name" placeholder="Enter destination, city name, airport or address" class="typeahead form-control"
+                                [typeaheadMinLength]="2" (ngModelChange)="checkInputH($event)" typeaheadWaitMs="1000" required/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-group-lg form-group-icon-left">
+                            <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                            <label>Check-in date</label>
+                            <input type="text" class="date-pick form-control" name="checkinDate" placeholder="Check-in Date" [maxDate]="maxCheckinDate"
+                                [minDate]="minCheckinDate" [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange'}"
+                                (bsValueChange)="formateCheckoutDate($event)" required [(ngModel)]="checkinDate" bsDatepicker>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group form-group-lg form-group-icon-left">
+                            <i class="fa fa-calendar input-icon input-icon-highlight"></i>
+                            <label>Check-out date</label>
+                            <input type="text" class="date-pick form-control" name="checkoutDate" placeholder="Check-out Date" [maxDate]="maxCheckoutDate"
+                                [minDate]="minCheckoutDate" [bsConfig]="{ dateInputFormat: 'ddd Do MMM, YYYY', containerClass: 'theme-orange' }"
+                                required [(ngModel)]="checkoutDate" bsDatepicker>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-group form-group-lg form-group-select-plus">
+                            <label>No. of rooms</label>
+                            <select class="form-control" (ngModelChange)="checkRooms($event)" name="noOfRooms" [(ngModel)]="noOfRooms" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngFor="let u of roomDetailLists; let i = index">
+                    <div class="col-md-2">
+                        <div class="form-group form-group-lg form-group-select-plus">
+                            <label for="noOfRooms">Adults (18yrs+)</label>
+                            <select class="form-control" name="adult{{i}}" (ngModelChange)="setAdultAge($event, i)" [(ngModel)]="u.numberOfAdults" required>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group form-group-lg form-group-select-plus">
+                            <label for="child{{i}}">Child(0 - 17yrs)</label>
+                            <select class="form-control" name="child{{i}}" (ngModelChange)="setChildrenAge($event, i)" [(ngModel)]="u.numberOfChildren"
+                                required>
+                                <option value="0">--</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2" *ngFor="let v of u.childrenAgeList; let j = index">
+                        <div class="form-group form-group-lg form-group-select-plus">
+                            <label for="childAge{{j}}">Age of Child {{j + 1}}</label>
+                            <select class="form-control" name="childAge{{j}}" [(ngModel)]="roomDetailLists[i].childrenAgeList[j]" required>
+                                <option value="0">Under 1</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <button class="btn btn-primary btn-lg" type="submit">Search for Hotels</button>
+            </form>
+        </div>
+    </div>
+</ng-template>
+<div *ngIf="isModalShown" [config]="{ show: true}" (onHidden)="onHidden()" bsModal #autoShownModal="bs-modal" class="modal fade"
+    tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </p>
+
+                <p class="mb30" style="color: red">Error retrieving search results, Please try again</p>
+            </div>
+        </div>
+    </div>
+</div>
